@@ -1,0 +1,6 @@
+*/*.o
+*.idea
+*/*.idea
+*/.clangd
+*/btc
+
