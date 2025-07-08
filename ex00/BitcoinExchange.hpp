@@ -12,10 +12,11 @@
 
 #pragma once
 
+#include <utils.hpp>
 #include <vector>
-#include <string>
 
-typedef  std::pair< unsigned int , float > BLOCK; 
+
+typedef  std::pair< unsigned int , double > BLOCK; 
 
 class BitcoinExchange
 {

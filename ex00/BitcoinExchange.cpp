@@ -1,7 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   BitcoinExchange.cpp                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: franaivo <franaivo@student.42antananarivo  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/08 15:38:59 by franaivo          #+#    #+#             */
+/*   Updated: 2025/07/08 15:49:13 by franaivo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <BitcoinExchange.hpp>
-#include <sstream>
-#include <cstdlib>
-#include <algorithm>
+
+#define RESET       "\033[0m"
+#define RED         "\033[31m"
+#define GREEN       "\033[32m"
 
 BitcoinExchange::BitcoinExchange()
 {
@@ -13,50 +26,8 @@ BitcoinExchange::~BitcoinExchange()
     return;
 }
 
-long int strtol_10_except(std::string str)
-{
-    char *end;
 
-    std::string set = " \v\t+-";
-    if(std::find_first_of(str.begin() , str.end() , set.begin() , set.end()) != str.end())
-        throw std::runtime_error("[ "  + str + " ] Invalid token");
-
-    long int n = std::strtol(str.c_str() , &end , 10);
-
-    if(*end)
-        throw std::runtime_error("[ "  + str + " ] Invalid token");
-
-    return n;
-}
-
-double strtod_except(std::string str)
-{
-    return 0;
-}
-
-unsigned int parse_date(std::string str)
-{
-    std::istringstream ss_date(str);
-
-    std::string yyyy;
-    std::string mm;
-    std::string dd;
-
-    std::getline(ss_date , yyyy , '-'); 
-    std::getline(ss_date , mm   , '-'); 
-    std::getline(ss_date , dd   , '-'); 
-
-    if(yyyy.empty() || mm.empty() || dd.empty() || !ss_date.eof())
-        throw std::runtime_error("invalid date (yyyy-mm-dd)");
-
-    unsigned int year   = strtol_10_except(yyyy);
-    unsigned int month  = strtol_10_except(mm);
-    unsigned int day    = strtol_10_except(dd);
-
-    return year + month + day;
-}
-
-void BitcoinExchange::sync (std::string transaction)
+BLOCK BitcoinExchange::serialise(std::string transaction)
 {
     std::istringstream ss_transaction(transaction);
 
@@ -72,8 +43,34 @@ void BitcoinExchange::sync (std::string transaction)
     if(!ss_transaction.eof())
         throw std::runtime_error("unkown field");
     
-    unsigned int date_int = parse_date(date);
+    unsigned int    date_num    = parse_date(date);
+    double          value_num   = strtod_except(value);
 
-    nodes.push_back(std::make_pair(date_int,0)); 
-    return;
+    return std::make_pair(date_num,value_num); 
+}
+
+void BitcoinExchange::sync (std::string transaction)
+{
+    try
+    {
+        BLOCK block = BitcoinExchange::serialise(transaction);
+        BLOCK last; 
+        
+        if(!nodes.empty())
+            last = nodes.back();
+
+        if(!nodes.empty() && (last.first >= block.first))
+        {
+            throw std::runtime_error("outdated blocks");
+        }
+
+        nodes.push_back(block);
+    } 
+
+    catch (std::exception& err)
+    {
+        std::cout 
+            << std::left << std::setw(25) << transaction 
+            << RED <<  " Error : " << err.what() << RESET << std::endl;
+    }
 }
