@@ -38,7 +38,7 @@ double strtod_except(std::string str)
 
     double n = std::strtod(str.c_str() , &end);
 
-    if(*end)
+    if(*end || std::isnan(n))
         throw std::runtime_error("["  + str + "] Invalid token");
 
     return n;

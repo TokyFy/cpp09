@@ -19,6 +19,12 @@
 #include <sstream>
 #include <iostream>
 #include <iomanip>
+#include <cmath>
+
+#define RESET       "\033[0m"
+#define RED         "\033[31m"
+#define GREEN       "\033[32m"
+
 
 long int        strtol_except(std::string str);
 double          strtod_except(std::string str);

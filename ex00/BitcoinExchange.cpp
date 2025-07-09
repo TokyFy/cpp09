@@ -12,10 +12,6 @@
 
 #include <BitcoinExchange.hpp>
 
-#define RESET       "\033[0m"
-#define RED         "\033[31m"
-#define GREEN       "\033[32m"
-
 BitcoinExchange::BitcoinExchange()
 {
     return;
@@ -73,4 +69,44 @@ void BitcoinExchange::sync (std::string transaction)
             << std::left << std::setw(25) << transaction 
             << RED <<  " Error : " << err.what() << RESET << std::endl;
     }
+}
+
+void BitcoinExchange::query(std::string tranfers)
+{
+    try
+    {
+        std::string transaction = tranfers;
+
+        size_t pos = transaction.find(" | " , 0);
+
+        if(pos == std::string::npos)
+            throw std::runtime_error("Invalid format (yyyy-mm-dd | 0.0)");
+
+        transaction.replace(pos , 3 , ",");
+
+        BLOCK block = BitcoinExchange::serialise(transaction);
+
+        double          value = block.second;
+
+        if(value < 0 || value > 1000)
+            throw std::runtime_error("value should be in [0 - 1000] range");
+
+        std::vector<BLOCK>::iterator match = std::upper_bound(nodes.begin() , nodes.end() , block , comp<BLOCK>);
+        
+        if(match != nodes.begin())
+            match--;
+        
+        std::cout << tranfers.substr(0 , 10) << " => " << value << " = " << value * match->second << std::endl;
+    } 
+    catch (std::exception& err)
+    {
+        std::cout 
+            << std::left << std::setw(25) << tranfers 
+            << RED <<  " Error : " << err.what() << RESET << std::endl;
+    }
+}
+
+size_t BitcoinExchange::size() const
+{
+    return nodes.size();
 }
