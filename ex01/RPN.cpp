@@ -3,15 +3,34 @@
 #include <cstdlib>
 #include <utility>
 #include <iomanip>
-#include <queue>
 #include <sstream>
+#include <deque>
+
+TOKEN op(TOKEN x , const TOKEN y , const TOKEN_TYPE sign)
+{
+    if(x.first != NUMERAL || y.first != NUMERAL)
+        throw std::runtime_error("Invalied operand");
+
+    switch(sign)
+    {
+        case ADDEND :
+            return std::make_pair<TOKEN_TYPE , double>(NUMERAL , x.second + y.second);
+        case MINUEND :
+            return std::make_pair<TOKEN_TYPE , double>(NUMERAL , x.second - y.second);
+        case DIVIDEND :
+            return std::make_pair<TOKEN_TYPE , double>(NUMERAL , x.second / y.second);
+        case MULTIPLICAND :
+            return std::make_pair<TOKEN_TYPE , double>(NUMERAL , x.second * y.second);
+        default :
+            throw std::runtime_error("Invalid operator");
+    }
+}
 
 double RPN::eval(const std::string& expr)
 {
     (void)(expr);
 
-    std::queue<TOKEN> tokens;
-    std::queue<TOKEN> operand;
+    std::deque<TOKEN> tokens;
 
     std::istringstream ss_tokens(expr);
     std::string token;
@@ -19,15 +38,32 @@ double RPN::eval(const std::string& expr)
     while(std::getline(ss_tokens , token , ' '))
     {
         if(!token.empty())
-            tokens.push(RPN::tokenizer(token));
-    }
-    
-    while(tokens.size() != 1)
-    {
-            
+            tokens.push_back(RPN::tokenizer(token));
     }
 
-    return 0;
+    std::deque<TOKEN> operand;
+
+    while(!tokens.empty())
+    {
+        TOKEN t =   tokens.front(); tokens.pop_front();
+
+        if(t.first != NUMERAL)
+        {
+            if(operand.size() < 2)
+                throw std::runtime_error("not enough operand");
+
+            TOKEN x = operand.front() ; operand.pop_front() ;
+            TOKEN y = operand.front() ; operand.pop_front() ;
+            operand.push_front(op(y,x,t.first));
+        }
+        else
+            operand.push_front(t);
+    }
+
+    if(operand.size() != 1)
+        throw std::runtime_error("malformed expr");
+    
+    return operand.front().second;
 }
 
 TOKEN RPN::tokenizer(const std::string& expr)

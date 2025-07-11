@@ -91,7 +91,7 @@ void BitcoinExchange::query(std::string tranfers)
         if(value < 0 || value > 1000)
             throw std::runtime_error("value should be in [0 - 1000] range");
 
-        std::vector<BLOCK>::iterator match = std::upper_bound(nodes.begin() , nodes.end() , block , comp<BLOCK>);
+        std::list<BLOCK>::iterator match = std::upper_bound(nodes.begin() , nodes.end() , block , comp<BLOCK>);
         
         if(match != nodes.begin())
             match--;

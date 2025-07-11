@@ -13,15 +13,14 @@
 #pragma once
 
 #include <utils.hpp>
-#include <vector>
-
+#include <list>
 
 typedef  std::pair< unsigned int , double > BLOCK; 
 
 class BitcoinExchange
 {
     private:
-        std::vector<BLOCK> nodes;
+        std::list<BLOCK> nodes;
 
         BitcoinExchange(const BitcoinExchange&);
         BitcoinExchange& operator=(const BitcoinExchange&);
