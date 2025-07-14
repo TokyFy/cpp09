@@ -4,7 +4,7 @@
 #include <utility>
 #include <iomanip>
 #include <sstream>
-#include <deque>
+#include <stack>
 
 TOKEN op(TOKEN x , const TOKEN y , const TOKEN_TYPE sign)
 {
@@ -28,42 +28,36 @@ TOKEN op(TOKEN x , const TOKEN y , const TOKEN_TYPE sign)
 
 double RPN::eval(const std::string& expr)
 {
-    (void)(expr);
-
-    std::deque<TOKEN> tokens;
-
     std::istringstream ss_tokens(expr);
     std::string token;
+    std::stack<TOKEN> operand;
 
-    while(std::getline(ss_tokens , token , ' '))
+    while (std::getline(ss_tokens, token, ' '))
     {
-        if(!token.empty())
-            tokens.push_back(RPN::tokenizer(token));
-    }
+        if (token.empty())
+            continue;
 
-    std::deque<TOKEN> operand;
+        TOKEN t = RPN::tokenizer(token);
 
-    while(!tokens.empty())
-    {
-        TOKEN t =   tokens.front(); tokens.pop_front();
-
-        if(t.first != NUMERAL)
+        if (t.first != NUMERAL)
         {
-            if(operand.size() < 2)
-                throw std::runtime_error("not enough operand");
+            if (operand.size() < 2)
+                throw std::runtime_error("not enough operands");
 
-            TOKEN x = operand.front() ; operand.pop_front() ;
-            TOKEN y = operand.front() ; operand.pop_front() ;
-            operand.push_front(op(y,x,t.first));
+            TOKEN x = operand.top(); operand.pop();
+            TOKEN y = operand.top(); operand.pop();
+            operand.push(op(y, x, t.first));
         }
         else
-            operand.push_front(t);
+        {
+            operand.push(t);
+        }
     }
 
-    if(operand.size() != 1)
+    if (operand.size() != 1)
         throw std::runtime_error("malformed expr");
-    
-    return operand.front().second;
+
+    return operand.top().second;
 }
 
 TOKEN RPN::tokenizer(const std::string& expr)
