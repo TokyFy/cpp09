@@ -1,10 +1,4 @@
 #include <RPN.hpp>
-#include <iostream>
-#include <cstdlib>
-#include <utility>
-#include <iomanip>
-#include <sstream>
-#include <stack>
 
 TOKEN op(TOKEN x , const TOKEN y , const TOKEN_TYPE sign)
 {
@@ -49,9 +43,7 @@ double RPN::eval(const std::string& expr)
             operand.push(op(y, x, t.first));
         }
         else
-        {
             operand.push(t);
-        }
     }
 
     if (operand.size() != 1)

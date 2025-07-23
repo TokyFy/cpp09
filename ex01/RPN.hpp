@@ -1,6 +1,12 @@
 #pragma once
 
 #include <string>
+#include <utility>
+#include <cstdlib>
+#include <iomanip>
+#include <sstream>
+#include <iostream>
+#include <stack>
 
 enum TOKEN_TYPE {NUMERAL , ADDEND , MINUEND , DIVIDEND , MULTIPLICAND , ERROR};
 
