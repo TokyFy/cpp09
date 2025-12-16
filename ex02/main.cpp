@@ -1,8 +1,8 @@
-#include <stdexcept>
-#include <cstdlib>
-#include <iostream>
-#include <string>
 #include <algorithm>
+#include <stdexcept>
+#include <iostream>
+#include <cstdlib>
+#include <string>
 #include <vector>
 
 
@@ -70,10 +70,9 @@ void insert_pending(std::vector<long int> &main_chain , std::vector<long int> &p
     {
         if(pending[i] < 0)
         {
-            i++;
+            i++; 
             continue;
         }
-
         binary_insert(main_chain , pending[i]);
         i++;
     }
