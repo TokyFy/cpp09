@@ -1,7 +1,7 @@
 NAME = PmergeMe
 
 FLAGS = -Wall -Wextra -Werror -std=c++98 -g
-SRC = main.cpp
+SRC = main.cpp PmergeMe.cpp
 
 OBJ = $(SRC:.cpp=.o)
 COMPILER = c++

@@ -1,141 +1,76 @@
-#include <algorithm>
-#include <stdexcept>
-#include <iostream>
-#include <cstdlib>
-#include <string>
-#include <vector>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: franaivo <franaivo@student.42antananarivo  +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/01/06 00:00:00 by franaivo          #+#    #+#             */
+/*   Updated: 2025/01/06 00:00:00 by franaivo         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "PmergeMe.hpp"
+#include <sys/time.h>
+#include <iomanip>
 
-long int strtol_except(std::string str)
+/*
+** Get current time in microseconds
+*/
+static double get_time_microseconds(void)
 {
-    char *end;
-
-    std::string set = " \v\t+-";
-    if(std::find_first_of(str.begin() , str.end() , set.begin() , set.end()) != str.end())
-        throw std::runtime_error("["  + str + "] Invalid token");
-
-    long int n = std::strtol(str.c_str() , &end , 10);
-
-    if(*end)
-        throw std::runtime_error("["  + str + "] Invalid token");
-
-    return n;
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return static_cast<double>(tv.tv_sec) * 1000000.0 + static_cast<double>(tv.tv_usec);
 }
 
-void print_vector(std::vector<long int> numbers)
+int main(int argc, char** argv)
 {
-    unsigned int i = 0;
-
-    while(i < numbers.size())
+    if (argc < 2)
     {
-        std::cout << numbers[i] << " ,";
-        i++;
+        std::cerr << "Error" << std::endl;
+        return 1;
     }
-
-    std::cout << std::endl;
-}
-
-void binary_insert(std::vector<long int> &number, long int n) {
-    int left = 0, right = static_cast<int>(number.size());
-
-    while (left < right) {
-        int mid = left + (right - left) / 2;
-        if (number[mid] < n)
-            left = mid + 1;
-        else
-            right = mid;
-    }
-
-    number.insert(number.begin() + left, n);
-}
-
-void insert_pending(std::vector<long int> &main_chain , std::vector<long int> &pending )
-{
-    static const int JACOBSTHAL_NUMBERS[] = { 
-        1,     3,      5,     11,    21,    43,    85,     171,    341,   683,   
-        1365,  2731,   5461,  10923, 21845, 43691, 87381, 174763, 349525, 699051 }; 
-
-    unsigned int i = 0;
-
-    while(static_cast<unsigned int>(JACOBSTHAL_NUMBERS[i] - 1) < pending.size())
-    {
-        binary_insert(main_chain , pending[JACOBSTHAL_NUMBERS[i] - 1 ]);
-        pending[JACOBSTHAL_NUMBERS[i] - 1] *= -1;
-        i++;
-    }
-
-    i = 0;
-
-    while(i < pending.size())
-    {
-        if(pending[i] < 0)
-        {
-            i++; 
-            continue;
-        }
-        binary_insert(main_chain , pending[i]);
-        i++;
-    }
-
-    pending.clear();
-}
-
-void pmergeme(std::vector<long int> &numbers)
-{
-    if(numbers.size() == 1)
-        return;
-
-    std::vector<long int> main_chain;
-    std::vector<long int> pending;
     
-    while(numbers.size() >  1)
+    std::vector<int> vec;
+    std::deque<int> deq;
+    
+    if (!parse_arguments(argc, argv, vec, deq))
     {
-        long int x = numbers[0];
-        long int y = numbers[1];
-
-        main_chain.push_back(std::max(x ,y));
-        pending.push_back(std::min(x,y));
-
-        numbers.erase(numbers.begin() , numbers.begin() + 2);
-    }
-
-    if(numbers.size() == 1)
-    {
-        pending.push_back(numbers[0]);
-        numbers.erase(numbers.begin());
-    }
-
-    pmergeme(main_chain);
-    insert_pending(main_chain , pending);
-
-    numbers = main_chain;
-}
-
-int main(int argc , char** argv)
-{
-    std::vector<long int> numbers;
-
-    if(argc <= 2)
-        return 1;
-
-    unsigned int i = 1;
-
-    try
-    {
-        while(i < (unsigned int)argc)
-        {
-            numbers.push_back(strtol_except(argv[i]));
-            i++;
-        }
-    }
-    catch (std::exception &e)
-    {
-        std::cout << e.what() << std::endl;
+        std::cerr << "Error" << std::endl;
         return 1;
     }
-
-    pmergeme(numbers);
-    print_vector(numbers);
-
+    
+    if (vec.empty())
+    {
+        std::cerr << "Error" << std::endl;
+        return 1;
+    }
+    
+    /* Display unsorted sequence */
+    print_sequence_vector("Before: ", vec);
+    
+    /* Sort with vector and measure time */
+    std::vector<int> vec_copy = vec;
+    double start_vec = get_time_microseconds();
+    ford_johnson_sort_vector(vec_copy);
+    double end_vec = get_time_microseconds();
+    double time_vec = end_vec - start_vec;
+    
+    /* Sort with deque and measure time */
+    std::deque<int> deq_copy = deq;
+    double start_deq = get_time_microseconds();
+    ford_johnson_sort_deque(deq_copy);
+    double end_deq = get_time_microseconds();
+    double time_deq = end_deq - start_deq;
+    
+    /* Display sorted sequence */
+    print_sequence_vector("After:  ", vec_copy);
+    
+    /* Display timing information */
+    std::cout << std::fixed << std::setprecision(5);
+    print_time("vector", vec.size(), time_vec);
+    print_time("deque", deq.size(), time_deq);
+    
     return 0;
 }
