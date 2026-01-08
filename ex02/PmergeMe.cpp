@@ -243,8 +243,7 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
     
     for (size_t i = 0; i < insertion_order.size(); ++i)
     {
-        size_t pend_idx = insertion_order[i] - 1; /* Convert 1-based to 0-based */
-        
+        size_t pend_idx = insertion_order[i] - 1;        
         if (pend_idx >= pend.size())
             continue;
         
@@ -401,6 +400,11 @@ void print_sequence_vector(const std::string& prefix, const std::vector<int>& ve
         std::cout << vec[i];
         if (i + 1 < vec.size())
             std::cout << " ";
+
+        if(i >= 42)
+        {
+            std::cout << "..."; break;
+        }
     }
     std::cout << std::endl;
 }
