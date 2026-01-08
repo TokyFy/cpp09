@@ -1,4 +1,5 @@
 #include <RPN.hpp>
+#include <cmath>
 
 TOKEN op(TOKEN x , const TOKEN y , const TOKEN_TYPE sign)
 {
@@ -12,7 +13,11 @@ TOKEN op(TOKEN x , const TOKEN y , const TOKEN_TYPE sign)
         case MINUEND :
             return std::make_pair<TOKEN_TYPE , double>(NUMERAL , x.second - y.second);
         case DIVIDEND :
+        {
+            if(y.second == 0)
+                throw std::runtime_error("undefined division operation");
             return std::make_pair<TOKEN_TYPE , double>(NUMERAL , x.second / y.second);
+        }
         case MULTIPLICAND :
             return std::make_pair<TOKEN_TYPE , double>(NUMERAL , x.second * y.second);
         default :
@@ -70,10 +75,22 @@ TOKEN RPN::tokenizer(const std::string& expr)
     }
 
     char *end;
-    double value = std::strtod(expr.c_str() , &end); 
+    
+    #ifdef RPN_BETA
+        
+        double value = std::strtol(expr.c_str() , &end ,10); 
+    
+        if(*end || value < 0 || value > 9 || std::isnan(value))
+            throw std::runtime_error("( " + expr + " ) value not supported");
 
-    if(*end)
-        throw std::runtime_error("( " + expr + " ) invalid operand");
+    #else
+        
+        double value = std::strtod(expr.c_str() , &end); 
+
+        if(*end)
+            throw std::runtime_error("( " + expr + " ) invalid operand");
+
+    #endif
 
     return std::make_pair<TOKEN_TYPE , double>(NUMERAL , static_cast<double>(value));
 }
@@ -82,7 +99,7 @@ std::ostream& operator<< (std::ostream& stream, const TOKEN token)
 {
     const std::string TYPE[] = {"NUMERAL" , "ADDEND" , "MINUEND" , "DIVIDEND" , "MULTIPLICAND"};
     
-    std::cout << std::setw(13) << std::left <<TYPE[token.first] << token.second;
+    std::cout << std::setw(13) << std::left << TYPE[token.first] << token.second;
 
     return stream; 
 }

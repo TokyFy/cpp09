@@ -8,9 +8,11 @@
 #include <iostream>
 #include <stack>
 
-enum TOKEN_TYPE {NUMERAL , ADDEND , MINUEND , DIVIDEND , MULTIPLICAND , ERROR};
+#define RPN_BETA
 
+enum TOKEN_TYPE {NUMERAL , ADDEND , MINUEND , DIVIDEND , MULTIPLICAND , ERROR};
 typedef std::pair<TOKEN_TYPE , double> TOKEN;
+
 
 class RPN
 {

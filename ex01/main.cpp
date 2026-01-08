@@ -1,10 +1,11 @@
 #include <RPN.hpp>
+#include <iostream>
 
 int main(int argc , char **argv)
 {
     if(argc != 2)
     {
-        std::cout << "usage : ./RPN expr..." << std::endl;
+        std::cerr << "usage : ./RPN expr..." << std::endl;
         return EXIT_FAILURE;
     }
 
@@ -14,7 +15,7 @@ int main(int argc , char **argv)
     }
     catch(std::exception &e)
     {
-        std::cout << "Error : " << e.what() << std::endl; 
+        std::cerr << "Error : " << e.what() << std::endl; 
     }
 
     return EXIT_SUCCESS;

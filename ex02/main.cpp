@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: franaivo <franaivo@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/06 00:00:00 by franaivo          #+#    #+#             */
-/*   Updated: 2025/01/06 00:00:00 by franaivo         ###   ########.fr       */
+/*   Created: 2026/01/08 08:55:26 by franaivo          #+#    #+#             */
+/*   Updated: 2026/01/08 10:40:48 by franaivo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 #include <sys/time.h>
 #include <iomanip>
 
-/*
-** Get current time in microseconds
-*/
 static double get_time_microseconds(void)
 {
     struct timeval tv;
@@ -47,30 +44,22 @@ int main(int argc, char** argv)
         return 1;
     }
     
-    /* Display unsorted sequence */
     print_sequence_vector("Before: ", vec);
     
-    /* Sort with vector and measure time */
-    std::vector<int> vec_copy = vec;
     double start_vec = get_time_microseconds();
-    ford_johnson_sort_vector(vec_copy);
+    ford_johnson_sort_vector(vec);
     double end_vec = get_time_microseconds();
     double time_vec = end_vec - start_vec;
     
-    /* Sort with deque and measure time */
-    std::deque<int> deq_copy = deq;
     double start_deq = get_time_microseconds();
-    ford_johnson_sort_deque(deq_copy);
+    ford_johnson_sort_deque(deq);
     double end_deq = get_time_microseconds();
     double time_deq = end_deq - start_deq;
     
-    /* Display sorted sequence */
-    print_sequence_vector("After:  ", vec_copy);
+    print_sequence_vector("After:  ", vec);
     
-    /* Display timing information */
-    std::cout << std::fixed << std::setprecision(5);
     print_time("vector", vec.size(), time_vec);
-    print_time("deque", deq.size(), time_deq);
+    print_time("deque ", deq.size(), time_deq);
     
     return 0;
 }

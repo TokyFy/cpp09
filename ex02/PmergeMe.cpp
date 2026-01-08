@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: franaivo <franaivo@student.42antananarivo  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/06 00:00:00 by franaivo          #+#    #+#             */
-/*   Updated: 2025/01/06 00:00:00 by franaivo         ###   ########.fr       */
+/*   Created: 2026/01/08 10:25:28 by franaivo          #+#    #+#             */
+/*   Updated: 2026/01/08 10:28:53 by franaivo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ std::vector<size_t> generate_jacobsthal_sequence(size_t n)
         jacobsthal.push_back(jacobsthal_numbers[i]);
     }
     
-    /* Add the first element greater than n to ensure proper bounds */
     for (size_t i = 0; i < jacobsthal_size; ++i)
     {
         if (jacobsthal_numbers[i] > n)
@@ -127,7 +126,6 @@ std::vector<size_t> generate_insertion_order(size_t n)
     std::vector<size_t> jacobsthal = generate_jacobsthal_sequence(n);
     std::vector<bool> inserted(n + 1, false);
     
-    /* Index 1 (b1) is already in the main chain, mark as inserted */
     inserted[1] = true;
     
     for (size_t k = 2; k < jacobsthal.size(); ++k)
@@ -135,7 +133,6 @@ std::vector<size_t> generate_insertion_order(size_t n)
         size_t jk = jacobsthal[k];
         size_t jk_prev = jacobsthal[k - 1];
         
-        /* Insert from J(k) down to J(k-1) + 1 */
         for (size_t idx = jk; idx > jk_prev; --idx)
         {
             if (idx <= n && !inserted[idx])
@@ -146,7 +143,6 @@ std::vector<size_t> generate_insertion_order(size_t n)
         }
     }
     
-    /* Insert any remaining elements not covered by Jacobsthal */
     for (size_t i = 2; i <= n; ++i)
     {
         if (!inserted[i])
@@ -183,11 +179,9 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
 {
     size_t n = vec.size();
     
-    /* Base case: 0 or 1 element is already sorted */
     if (n <= 1)
         return;
     
-    /* Base case: 2 elements - just compare and swap if needed */
     if (n == 2)
     {
         if (vec[0] > vec[1])
@@ -195,7 +189,6 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
         return;
     }
     
-    /* Step 1: Form pairs and separate into larger (main) and smaller (pend) */
     std::vector<std::pair<int, int> > pairs;
     bool has_straggler = (n % 2 == 1);
     int straggler = 0;
@@ -209,44 +202,35 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
         int a = vec[2 * i];
         int b = vec[2 * i + 1];
         
-        /* Ensure first element of pair is larger */
         if (a < b)
             pairs.push_back(std::make_pair(b, a));
         else
             pairs.push_back(std::make_pair(a, b));
     }
     
-    /* Step 2: Extract the larger elements and sort them recursively */
     std::vector<int> main_chain;
     for (size_t i = 0; i < pairs.size(); ++i)
         main_chain.push_back(pairs[i].first);
     
     ford_johnson_sort_vector(main_chain);
     
-    /* Step 3: Build a map from sorted main_chain back to original pairs */
-    /* We need to track which pend element corresponds to each main element */
     std::vector<int> pend;
     std::vector<size_t> pend_positions;
     
     for (size_t i = 0; i < main_chain.size(); ++i)
     {
-        /* Find which pair this main_chain element came from */
         for (size_t j = 0; j < pairs.size(); ++j)
         {
             if (pairs[j].first == main_chain[i])
             {
                 pend.push_back(pairs[j].second);
                 pend_positions.push_back(i);
-                /* Mark as used by setting to impossible value */
                 pairs[j].first = -1;
                 break;
             }
         }
     }
     
-    /* Step 4: Insert b1 (first pend element) at the beginning */
-    /* b1's pair is a1 which is at position 0 in main_chain */
-    /* b1 is guaranteed to be smaller than a1 */
     std::vector<int> sorted;
     if (!pend.empty())
     {
@@ -255,11 +239,7 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted.push_back(main_chain[i]);
     
-    /* Step 5: Insert remaining pend elements using Jacobsthal order */
     std::vector<size_t> insertion_order = generate_insertion_order(pend.size());
-    
-    /* Track how many elements have been inserted before each main_chain position */
-    /* This helps determine the search limit for binary insertion */
     
     for (size_t i = 0; i < insertion_order.size(); ++i)
     {
@@ -269,10 +249,6 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
             continue;
         
         int value = pend[pend_idx];
-        
-        /* The search limit: we know pend[k] < main_chain[k] */
-        /* So we only need to search up to the position of main_chain[k] in sorted */
-        /* Find where main_chain[pend_positions[pend_idx]] is in sorted array */
         
         size_t limit = sorted.size();
         int paired_main = main_chain[pend_positions[pend_idx]];
@@ -289,7 +265,6 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
         binary_insert_vector(sorted, value, limit);
     }
     
-    /* Step 6: Insert straggler if exists */
     if (has_straggler)
     {
         binary_insert_vector(sorted, straggler, sorted.size());
@@ -324,11 +299,9 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
 {
     size_t n = deq.size();
     
-    /* Base case: 0 or 1 element is already sorted */
     if (n <= 1)
         return;
     
-    /* Base case: 2 elements - just compare and swap if needed */
     if (n == 2)
     {
         if (deq[0] > deq[1])
@@ -336,7 +309,6 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         return;
     }
     
-    /* Step 1: Form pairs and separate into larger (main) and smaller (pend) */
     std::deque<std::pair<int, int> > pairs;
     bool has_straggler = (n % 2 == 1);
     int straggler = 0;
@@ -350,21 +322,18 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         int a = deq[2 * i];
         int b = deq[2 * i + 1];
         
-        /* Ensure first element of pair is larger */
         if (a < b)
             pairs.push_back(std::make_pair(b, a));
         else
             pairs.push_back(std::make_pair(a, b));
     }
     
-    /* Step 2: Extract the larger elements and sort them recursively */
     std::deque<int> main_chain;
     for (size_t i = 0; i < pairs.size(); ++i)
         main_chain.push_back(pairs[i].first);
     
     ford_johnson_sort_deque(main_chain);
     
-    /* Step 3: Build a map from sorted main_chain back to original pairs */
     std::deque<int> pend;
     std::deque<size_t> pend_positions;
     
@@ -382,7 +351,6 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         }
     }
     
-    /* Step 4: Insert b1 at the beginning */
     std::deque<int> sorted;
     if (!pend.empty())
     {
@@ -391,7 +359,6 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted.push_back(main_chain[i]);
     
-    /* Step 5: Insert remaining pend elements using Jacobsthal order */
     std::vector<size_t> insertion_order = generate_insertion_order(pend.size());
     
     for (size_t i = 0; i < insertion_order.size(); ++i)
@@ -418,7 +385,6 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         binary_insert_deque(sorted, value, limit);
     }
     
-    /* Step 6: Insert straggler if exists */
     if (has_straggler)
     {
         binary_insert_deque(sorted, straggler, sorted.size());
