@@ -58,27 +58,32 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
             pairs.push_back(std::make_pair(a, b));
     }
     
+    // Extract larger and smaller values from pairs and create direct mapping
     std::vector<int> main_chain;
+    std::map<int, int> value_map;  // Maps main_chain value to its pend value
     for (size_t i = 0; i < pairs.size(); ++i)
+    {
         main_chain.push_back(pairs[i].first);
+        value_map[pairs[i].first] = pairs[i].second;
+    }
     
     ford_johnson_sort_vector(main_chain);
     
+    // After recursion: main_chain is sorted. Create sorted_pend using map (O(n log n))
+    std::vector<int> sorted_pend(main_chain.size());
+    for (size_t i = 0; i < main_chain.size(); ++i)
+        sorted_pend[i] = value_map[main_chain[i]];
+    
+    // Step 1: Initialize sorted with the first pend element (smallest in entire sequence)
     std::vector<int> sorted;
     if (pair_count > 0)
-    {
-        for (size_t i = 0; i < pairs.size(); ++i)
-        {
-            if (pairs[i].first == main_chain[0])
-            {
-                sorted.push_back(pairs[i].second);
-                break;
-            }
-        }
-    }
+        sorted.push_back(sorted_pend[0]);
+    
+    // Step 2: Add all sorted main_chain elements
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted.push_back(main_chain[i]);
     
+    // Step 3: Insert remaining pend elements using Jacobsthal order (minimizes comparisons)
     std::vector<size_t> insertion_order = generate_insertion_order(pair_count);
     
     for (size_t i = 0; i < insertion_order.size(); ++i)
@@ -87,18 +92,10 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
         if (pend_idx >= pair_count)
             continue;
         
-        int value_to_insert = 0;
-        int paired_value = main_chain[pend_idx];
+        // Direct access: no search needed
+        int value_to_insert = sorted_pend[pend_idx];
         
-        for (size_t j = 0; j < pairs.size(); ++j)
-        {
-            if (pairs[j].first == paired_value)
-            {
-                value_to_insert = pairs[j].second;
-                break;
-            }
-        }
-        
+        // Binary search only up to paired element position + 1
         size_t limit = pend_idx + 1;
         binary_insert_vector(sorted, value_to_insert, limit);
     }
@@ -170,27 +167,32 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
             pairs.push_back(std::make_pair(a, b));
     }
     
+    // Extract larger and smaller values from pairs and create direct mapping
     std::deque<int> main_chain;
+    std::map<int, int> value_map;  // Maps main_chain value to its pend value
     for (size_t i = 0; i < pairs.size(); ++i)
+    {
         main_chain.push_back(pairs[i].first);
+        value_map[pairs[i].first] = pairs[i].second;
+    }
     
     ford_johnson_sort_deque(main_chain);
     
+    // After recursion: main_chain is sorted. Create sorted_pend using map (O(n log n))
+    std::deque<int> sorted_pend(main_chain.size());
+    for (size_t i = 0; i < main_chain.size(); ++i)
+        sorted_pend[i] = value_map[main_chain[i]];
+    
+    // Step 1: Initialize sorted with the first pend element (smallest in entire sequence)
     std::deque<int> sorted;
     if (pair_count > 0)
-    {
-        for (size_t i = 0; i < pairs.size(); ++i)
-        {
-            if (pairs[i].first == main_chain[0])
-            {
-                sorted.push_back(pairs[i].second);
-                break;
-            }
-        }
-    }
+        sorted.push_back(sorted_pend[0]);
+    
+    // Step 2: Add all sorted main_chain elements
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted.push_back(main_chain[i]);
     
+    // Step 3: Insert remaining pend elements using Jacobsthal order (minimizes comparisons)
     std::vector<size_t> insertion_order = generate_insertion_order(pair_count);
     
     for (size_t i = 0; i < insertion_order.size(); ++i)
@@ -199,18 +201,10 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         if (pend_idx >= pair_count)
             continue;
         
-        int value_to_insert = 0;
-        int paired_value = main_chain[pend_idx];
+        // Direct access: no search needed
+        int value_to_insert = sorted_pend[pend_idx];
         
-        for (size_t j = 0; j < pairs.size(); ++j)
-        {
-            if (pairs[j].first == paired_value)
-            {
-                value_to_insert = pairs[j].second;
-                break;
-            }
-        }
-        
+        // Binary search only up to paired element position + 1
         size_t limit = pend_idx + 1;
         binary_insert_deque(sorted, value_to_insert, limit);
     }
