@@ -1,18 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: franaivo <franaivo@student.42antananarivo  +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2026/01/08 08:55:26 by franaivo          #+#    #+#             */
-/*   Updated: 2026/01/08 10:40:48 by franaivo         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "PmergeMe.hpp"
 #include <sys/time.h>
-#include <iomanip>
+#include <ctime>
 
 static double get_time_microseconds(void)
 {
