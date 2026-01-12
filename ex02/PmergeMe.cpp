@@ -12,18 +12,13 @@
 
 #include "PmergeMe.hpp"
 
-size_t binary_search_insert_pos_vector(const std::vector<int>& sorted, int value, size_t end)
-{
-    std::vector<int>::const_iterator it = std::upper_bound(sorted.begin(), sorted.begin() + end, value);
-    return std::distance(sorted.begin(), it);
-}
+// VECTOR IMPLEMENTATION
 
 void binary_insert_vector(std::vector<int>& sorted, int value, size_t limit)
 {
-    size_t pos = binary_search_insert_pos_vector(sorted, value, limit);
-    sorted.insert(sorted.begin() + static_cast<std::vector<int>::difference_type>(pos), value);
+    std::vector<int>::iterator it = std::upper_bound(sorted.begin(), sorted.begin() + limit, value);
+    sorted.insert(it, value);
 }
-
 
 void ford_johnson_sort_vector(std::vector<int>& vec)
 {
@@ -79,7 +74,7 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
     if (pair_count > 0)
         sorted.push_back(sorted_pend[0]);
     
-    // Step 2: Add all sorted main_chain elements
+    // Add all sorted main_chain elements
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted.push_back(main_chain[i]);
     
@@ -93,9 +88,11 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
             continue;
         
         int value_to_insert = sorted_pend[pend_idx];
+        int paired_main = main_chain[pend_idx];
         
-        // Binary search only up to paired element position + 1
-        size_t limit = pend_idx + 1;
+        // Find current position of paired main_chain element using binary search
+        std::vector<int>::iterator it = std::lower_bound(sorted.begin(), sorted.end(), paired_main);
+        size_t limit = static_cast<size_t>(std::distance(sorted.begin(), it)) + 1;
         binary_insert_vector(sorted, value_to_insert, limit);
     }
     
@@ -121,16 +118,12 @@ void print_sequence_vector(const std::string& prefix, const std::vector<int>& ve
     std::cout << std::endl;
 }
 
-size_t binary_search_insert_pos_deque(const std::deque<int>& sorted, int value, size_t end)
-{
-    std::deque<int>::const_iterator it = std::upper_bound(sorted.begin(), sorted.begin() + end, value);
-    return std::distance(sorted.begin(), it);
-}
+// DEQUE IMPLEMENTATION
 
 void binary_insert_deque(std::deque<int>& sorted, int value, size_t limit)
 {
-    size_t pos = binary_search_insert_pos_deque(sorted, value, limit);
-    sorted.insert(sorted.begin() + static_cast<std::deque<int>::difference_type>(pos), value);
+    std::deque<int>::iterator it = std::upper_bound(sorted.begin(), sorted.begin() + limit, value);
+    sorted.insert(it, value);
 }
 
 void ford_johnson_sort_deque(std::deque<int>& deq)
@@ -201,9 +194,11 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
             continue;
         
         int value_to_insert = sorted_pend[pend_idx];
+        int paired_main = main_chain[pend_idx];
         
-        // Binary search only up to paired element position + 1
-        size_t limit = pend_idx + 1;
+        // Find current position of paired main_chain element using binary search
+        std::deque<int>::iterator it = std::lower_bound(sorted.begin(), sorted.end(), paired_main);
+        size_t limit = static_cast<size_t>(std::distance(sorted.begin(), it)) + 1;
         binary_insert_deque(sorted, value_to_insert, limit);
     }
     

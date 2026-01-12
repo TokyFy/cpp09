@@ -35,11 +35,9 @@ std::vector<size_t> generate_jacobsthal_sequence(size_t n);
 std::vector<size_t> generate_insertion_order(size_t n);
 
 void                ford_johnson_sort_vector(std::vector<int>& vec);
-size_t              binary_search_insert_pos_vector(const std::vector<int>& sorted, int value, size_t end);
 void                binary_insert_vector(std::vector<int>& sorted, int value, size_t limit);
 
 void                ford_johnson_sort_deque(std::deque<int>& deq);
-size_t              binary_search_insert_pos_deque(const std::deque<int>& sorted, int value, size_t end);
 void                binary_insert_deque(std::deque<int>& sorted, int value, size_t limit);
 
 void                print_sequence_vector(const std::string& prefix, const std::vector<int>& vec);

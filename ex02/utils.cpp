@@ -85,69 +85,31 @@ bool parse_arguments(int argc, char** argv, std::vector<int>& vec, std::deque<in
 }
 
 
-std::vector<size_t> generate_jacobsthal_sequence(size_t n)
+std::vector<size_t> generate_insertion_order(size_t n)
 {
-    static const size_t jacobsthal_numbers[] = {
-        0, 1, 1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, 5461,
+    static const size_t jacobsthal[] = {
+        1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, 5461,
         10923, 21845, 43691, 87381, 174763, 349525, 699051, 1398101,
         2796203, 5592405, 11184811, 22369621, 44739243, 89478485,
         178956971, 357913941, 715827883, 1431655765, 2863311531
     };
-    static const size_t jacobsthal_size = sizeof(jacobsthal_numbers) / sizeof(jacobsthal_numbers[0]);
     
-    std::vector<size_t> jacobsthal;
-    
-    if (n == 0)
-        return jacobsthal;
-    
-    for (size_t i = 0; i < jacobsthal_size && jacobsthal_numbers[i] <= n; ++i)
-    {
-        jacobsthal.push_back(jacobsthal_numbers[i]);
-    }
-    
-    for (size_t i = 0; i < jacobsthal_size; ++i)
-    {
-        if (jacobsthal_numbers[i] > n)
-        {
-            jacobsthal.push_back(jacobsthal_numbers[i]);
-            break;
-        }
-    }
-    
-    return jacobsthal;
-}
-
-std::vector<size_t> generate_insertion_order(size_t n)
-{
     std::vector<size_t> order;
-    
-    if (n == 0)
+    if (n < 2)
         return order;
-    
-    std::vector<size_t> jacobsthal = generate_jacobsthal_sequence(n);
-    std::vector<bool> inserted(n + 1, false);
-    
-    inserted[1] = true;
-    
-    for (size_t k = 2; k < jacobsthal.size(); ++k)
+
+    size_t prev = 1;
+    for (size_t k = 0; prev < n; ++k)
     {
-        size_t jk = jacobsthal[k];
-        size_t jk_prev = jacobsthal[k - 1];
+        size_t curr = jacobsthal[k];
+        size_t bound = curr;
+        if (curr > n)
+            bound = n;
         
-        for (size_t idx = jk; idx > jk_prev; --idx)
-        {
-            if (idx <= n && !inserted[idx])
-            {
-                order.push_back(idx);
-                inserted[idx] = true;
-            }
-        }
-    }
-    
-    for (size_t i = 2; i <= n; ++i)
-    {
-        if (!inserted[i])
+        for (size_t i = bound; i > prev; --i)
             order.push_back(i);
+        
+        prev = curr;
     }
     
     return order;
