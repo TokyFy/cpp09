@@ -64,51 +64,43 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
     
     ford_johnson_sort_vector(main_chain);
     
-    std::vector<int> pend;
-    std::vector<size_t> pend_positions;
-    
-    for (size_t i = 0; i < main_chain.size(); ++i)
+    std::vector<int> sorted;
+    if (pair_count > 0)
     {
-        for (size_t j = 0; j < pairs.size(); ++j)
+        for (size_t i = 0; i < pairs.size(); ++i)
         {
-            if (pairs[j].first == main_chain[i])
+            if (pairs[i].first == main_chain[0])
             {
-                pend.push_back(pairs[j].second);
-                pend_positions.push_back(i);
-                pairs[j].first = std::numeric_limits<int>::min();
+                sorted.push_back(pairs[i].second);
                 break;
             }
         }
     }
-    
-    std::vector<int> sorted;
-    if (!pend.empty())
-    {
-        sorted.push_back(pend[0]);
-    }
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted.push_back(main_chain[i]);
     
-    std::vector<size_t> insertion_order = generate_insertion_order(pend.size());
+    std::vector<size_t> insertion_order = generate_insertion_order(pair_count);
     
     for (size_t i = 0; i < insertion_order.size(); ++i)
     {
-        size_t pend_idx = insertion_order[i] - 1;        
-        if (pend_idx >= pend.size())
+        size_t pend_idx = insertion_order[i] - 1;
+        if (pend_idx >= pair_count)
             continue;
         
-        int value = pend[pend_idx];
+        int value_to_insert = 0;
+        int paired_value = main_chain[pend_idx];
         
-        size_t limit = sorted.size();
-        int paired_main = main_chain[pend_positions[pend_idx]];
-        
-        std::vector<int>::iterator it = std::find(sorted.begin(), sorted.end(), paired_main);
-        if (it != sorted.end())
+        for (size_t j = 0; j < pairs.size(); ++j)
         {
-            limit = std::distance(sorted.begin(), it) + 1;
+            if (pairs[j].first == paired_value)
+            {
+                value_to_insert = pairs[j].second;
+                break;
+            }
         }
         
-        binary_insert_vector(sorted, value, limit);
+        size_t limit = pend_idx + 1;
+        binary_insert_vector(sorted, value_to_insert, limit);
     }
     
     if (has_straggler)
@@ -184,52 +176,43 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
     
     ford_johnson_sort_deque(main_chain);
     
-    std::deque<int> pend;
-    std::deque<size_t> pend_positions;
-    
-    for (size_t i = 0; i < main_chain.size(); ++i)
+    std::deque<int> sorted;
+    if (pair_count > 0)
     {
-        for (size_t j = 0; j < pairs.size(); ++j)
+        for (size_t i = 0; i < pairs.size(); ++i)
         {
-            if (pairs[j].first == main_chain[i])
+            if (pairs[i].first == main_chain[0])
             {
-                pend.push_back(pairs[j].second);
-                pend_positions.push_back(i);
-                pairs[j].first = std::numeric_limits<int>::min();
+                sorted.push_back(pairs[i].second);
                 break;
             }
         }
     }
-    
-    std::deque<int> sorted;
-    if (!pend.empty())
-    {
-        sorted.push_back(pend[0]);
-    }
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted.push_back(main_chain[i]);
     
-    std::vector<size_t> insertion_order = generate_insertion_order(pend.size());
+    std::vector<size_t> insertion_order = generate_insertion_order(pair_count);
     
     for (size_t i = 0; i < insertion_order.size(); ++i)
     {
         size_t pend_idx = insertion_order[i] - 1;
-        
-        if (pend_idx >= pend.size())
+        if (pend_idx >= pair_count)
             continue;
         
-        int value = pend[pend_idx];
+        int value_to_insert = 0;
+        int paired_value = main_chain[pend_idx];
         
-        size_t limit = sorted.size();
-        int paired_main = main_chain[pend_positions[pend_idx]];
-        
-        std::deque<int>::iterator it = std::find(sorted.begin(), sorted.end(), paired_main);
-        if (it != sorted.end())
+        for (size_t j = 0; j < pairs.size(); ++j)
         {
-            limit = std::distance(sorted.begin(), it) + 1;
+            if (pairs[j].first == paired_value)
+            {
+                value_to_insert = pairs[j].second;
+                break;
+            }
         }
         
-        binary_insert_deque(sorted, value, limit);
+        size_t limit = pend_idx + 1;
+        binary_insert_deque(sorted, value_to_insert, limit);
     }
     
     if (has_straggler)
