@@ -74,7 +74,7 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted_pend[i] = value_map[main_chain[i]];
     
-    // Step 1: Initialize sorted with the first pend element (smallest in entire sequence)
+    // Initialize sorted with the first pend element (smallest in entire sequence)
     std::vector<int> sorted;
     if (pair_count > 0)
         sorted.push_back(sorted_pend[0]);
@@ -83,7 +83,7 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted.push_back(main_chain[i]);
     
-    // Step 3: Insert remaining pend elements using Jacobsthal order (minimizes comparisons)
+    // Insert remaining pend elements using Jacobsthal order
     std::vector<size_t> insertion_order = generate_insertion_order(pair_count);
     
     for (size_t i = 0; i < insertion_order.size(); ++i)
@@ -92,7 +92,6 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
         if (pend_idx >= pair_count)
             continue;
         
-        // Direct access: no search needed
         int value_to_insert = sorted_pend[pend_idx];
         
         // Binary search only up to paired element position + 1
@@ -183,16 +182,16 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted_pend[i] = value_map[main_chain[i]];
     
-    // Step 1: Initialize sorted with the first pend element (smallest in entire sequence)
+    // Initialize sorted with the first pend element (smallest in entire sequence)
     std::deque<int> sorted;
     if (pair_count > 0)
         sorted.push_back(sorted_pend[0]);
     
-    // Step 2: Add all sorted main_chain elements
+    // Add all sorted main_chain elements
     for (size_t i = 0; i < main_chain.size(); ++i)
         sorted.push_back(main_chain[i]);
     
-    // Step 3: Insert remaining pend elements using Jacobsthal order (minimizes comparisons)
+    // Insert remaining pend elements using Jacobsthal order (minimizes comparisons)
     std::vector<size_t> insertion_order = generate_insertion_order(pair_count);
     
     for (size_t i = 0; i < insertion_order.size(); ++i)
@@ -201,7 +200,6 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         if (pend_idx >= pair_count)
             continue;
         
-        // Direct access: no search needed
         int value_to_insert = sorted_pend[pend_idx];
         
         // Binary search only up to paired element position + 1
