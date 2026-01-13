@@ -57,17 +57,17 @@ int parse_number(const std::string& str)
     return static_cast<int>(num);
 }
 
-bool has_duplicate_vector(const std::vector<int>& vec, int value)
+bool has_duplicate(const std::vector<int>& vec, int value)
 {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
 }
 
-bool has_duplicate_deque(const std::deque<int>& deq, int value)
+bool has_duplicate(const std::deque<int>& deq, int value)
 {
     return std::find(deq.begin(), deq.end(), value) != deq.end();
 }
 
-bool parse_arguments_vector(int argc, char** argv, std::vector<int>& vec)
+bool parse_arguments(int argc, char** argv, std::vector<int>& vec)
 {
     for (int i = 1; i < argc; ++i)
     {
@@ -80,7 +80,7 @@ bool parse_arguments_vector(int argc, char** argv, std::vector<int>& vec)
         if (num < 0)
             return false;
         
-        if (has_duplicate_vector(vec, num))
+        if (has_duplicate(vec, num))
             return false;
         
         vec.push_back(num);
@@ -88,7 +88,7 @@ bool parse_arguments_vector(int argc, char** argv, std::vector<int>& vec)
     return true;
 }
 
-bool parse_arguments_deque(int argc, char** argv, std::deque<int>& deq)
+bool parse_arguments(int argc, char** argv, std::deque<int>& deq)
 {
     for (int i = 1; i < argc; ++i)
     {
@@ -101,7 +101,7 @@ bool parse_arguments_deque(int argc, char** argv, std::deque<int>& deq)
         if (num < 0)
             return false;
         
-        if (has_duplicate_deque(deq, num))
+        if (has_duplicate(deq, num))
             return false;
         
         deq.push_back(num);

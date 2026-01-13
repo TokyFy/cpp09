@@ -14,7 +14,7 @@
 
 // VECTOR IMPLEMENTATION
 
-void binary_insert_vector(std::vector<int>& sorted, int value, size_t limit)
+void binary_insert(std::vector<int>& sorted, int value, size_t limit)
 {
     std::vector<int>::iterator it = std::upper_bound(sorted.begin(), sorted.begin() + limit, value);
     sorted.insert(it, value);
@@ -93,18 +93,18 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
         // Find current position of paired main_chain element using binary search
         std::vector<int>::iterator it = std::lower_bound(sorted.begin(), sorted.end(), paired_main);
         size_t limit = static_cast<size_t>(std::distance(sorted.begin(), it)) + 1;
-        binary_insert_vector(sorted, value_to_insert, limit);
+        binary_insert(sorted, value_to_insert, limit);
     }
     
     if (has_straggler)
     {
-        binary_insert_vector(sorted, straggler, sorted.size());
+        binary_insert(sorted, straggler, sorted.size());
     }
     
     vec = sorted;
 }
 
-void print_sequence_vector(const std::string& prefix, const std::vector<int>& vec)
+void print_sequence(const std::string& prefix, const std::vector<int>& vec)
 {
     std::cout << prefix;
     
@@ -120,7 +120,7 @@ void print_sequence_vector(const std::string& prefix, const std::vector<int>& ve
 
 // DEQUE IMPLEMENTATION
 
-void binary_insert_deque(std::deque<int>& sorted, int value, size_t limit)
+void binary_insert(std::deque<int>& sorted, int value, size_t limit)
 {
     std::deque<int>::iterator it = std::upper_bound(sorted.begin(), sorted.begin() + limit, value);
     sorted.insert(it, value);
@@ -199,18 +199,18 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         // Find current position of paired main_chain element using binary search
         std::deque<int>::iterator it = std::lower_bound(sorted.begin(), sorted.end(), paired_main);
         size_t limit = static_cast<size_t>(std::distance(sorted.begin(), it)) + 1;
-        binary_insert_deque(sorted, value_to_insert, limit);
+        binary_insert(sorted, value_to_insert, limit);
     }
     
     if (has_straggler)
     {
-        binary_insert_deque(sorted, straggler, sorted.size());
+        binary_insert(sorted, straggler, sorted.size());
     }
     
     deq = sorted;
 }
 
-void print_sequence_deque(const std::string& prefix, const std::deque<int>& deq)
+void print_sequence(const std::string& prefix, const std::deque<int>& deq)
 {
     std::cout << prefix;
     for (size_t i = 0; i < deq.size(); ++i)

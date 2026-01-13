@@ -34,36 +34,31 @@ int main(int argc, char** argv)
     double start, time_vec, time_deq;
     
     start = get_time_microseconds();
-    if (!parse_arguments_deque(argc, argv, deq))
+    if (!parse_arguments(argc, argv, deq))
     {
         std::cerr << "Error" << std::endl;
         return 1;
     }
+
+    std::deque<int> deq_original(deq);
     ford_johnson_sort_deque(deq);
     time_deq = get_time_microseconds() - start;
     
     start = get_time_microseconds();
-    if (!parse_arguments_vector(argc, argv, vec))
+    if (!parse_arguments(argc, argv, vec))
     {
         std::cerr << "Error" << std::endl;
         return 1;
     }
     
-    if (vec.empty())
-    {
-        std::cerr << "Error" << std::endl;
-        return 1;
-    }
-    
-    std::vector<int> vec_original(vec);
     ford_johnson_sort_vector(vec);
     time_vec = get_time_microseconds() - start;
     
-    print_sequence_vector("Before: ", vec_original);
-    print_sequence_vector("After:  ", vec);
+    print_sequence("Before: ", deq_original);
+    print_sequence("After:  ", deq);
     
-    print_time("vector", vec.size(), time_vec);
-    print_time("deque ", deq.size(), time_deq);
+    print_time("Vector", vec.size(), time_vec);
+    print_time("Deque ", deq.size(), time_deq);
     
     return 0;
 }
