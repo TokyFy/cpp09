@@ -29,10 +29,10 @@
 
 bool                is_valid_number(const std::string& str);
 int                 parse_number(const std::string& str);
-bool                parse_arguments(int argc, char** argv, std::vector<int>& vec, std::deque<int>& deq);
+bool                parse_arguments_vector(int argc, char** argv, std::vector<int>& vec);
+bool                parse_arguments_deque(int argc, char** argv, std::deque<int>& deq);
 
-std::vector<size_t> generate_jacobsthal_sequence(size_t n);
-std::vector<size_t> generate_insertion_order(size_t n);
+std::map<size_t, size_t> generate_insertion_order(size_t n);
 
 void                ford_johnson_sort_vector(std::vector<int>& vec);
 void                binary_insert_vector(std::vector<int>& sorted, int value, size_t limit);

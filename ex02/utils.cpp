@@ -57,12 +57,17 @@ int parse_number(const std::string& str)
     return static_cast<int>(num);
 }
 
-bool has_duplicate(const std::vector<int>& vec, int value)
+bool has_duplicate_vector(const std::vector<int>& vec, int value)
 {
     return std::find(vec.begin(), vec.end(), value) != vec.end();
 }
 
-bool parse_arguments(int argc, char** argv, std::vector<int>& vec, std::deque<int>& deq)
+bool has_duplicate_deque(const std::deque<int>& deq, int value)
+{
+    return std::find(deq.begin(), deq.end(), value) != deq.end();
+}
+
+bool parse_arguments_vector(int argc, char** argv, std::vector<int>& vec)
 {
     for (int i = 1; i < argc; ++i)
     {
@@ -75,17 +80,37 @@ bool parse_arguments(int argc, char** argv, std::vector<int>& vec, std::deque<in
         if (num < 0)
             return false;
         
-        if (has_duplicate(vec, num))
+        if (has_duplicate_vector(vec, num))
             return false;
         
         vec.push_back(num);
+    }
+    return true;
+}
+
+bool parse_arguments_deque(int argc, char** argv, std::deque<int>& deq)
+{
+    for (int i = 1; i < argc; ++i)
+    {
+        std::string arg(argv[i]);
+        
+        if (!is_valid_number(arg))
+            return false;
+        
+        int num = parse_number(arg);
+        if (num < 0)
+            return false;
+        
+        if (has_duplicate_deque(deq, num))
+            return false;
+        
         deq.push_back(num);
     }
     return true;
 }
 
 
-std::vector<size_t> generate_insertion_order(size_t n)
+std::map<size_t, size_t> generate_insertion_order(size_t n)
 {
     static const size_t jacobsthal[] = {
         1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, 5461,
@@ -94,10 +119,11 @@ std::vector<size_t> generate_insertion_order(size_t n)
         178956971, 357913941, 715827883, 1431655765, 2863311531
     };
     
-    std::vector<size_t> order;
+    std::map<size_t, size_t> order;
     if (n < 2)
         return order;
 
+    size_t idx = 0;
     size_t prev = 1;
     for (size_t k = 0; prev < n; ++k)
     {
@@ -107,7 +133,7 @@ std::vector<size_t> generate_insertion_order(size_t n)
             bound = n;
         
         for (size_t i = bound; i > prev; --i)
-            order.push_back(i);
+            order[idx++] = i;
         
         prev = curr;
     }

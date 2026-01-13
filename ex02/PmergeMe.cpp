@@ -79,11 +79,11 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
         sorted.push_back(main_chain[i]);
     
     // Insert remaining pend elements using Jacobsthal order
-    std::vector<size_t> insertion_order = generate_insertion_order(pair_count);
+    std::map<size_t, size_t> insertion_order = generate_insertion_order(pair_count);
     
-    for (size_t i = 0; i < insertion_order.size(); ++i)
+    for (std::map<size_t, size_t>::iterator map_it = insertion_order.begin(); map_it != insertion_order.end(); ++map_it)
     {
-        size_t pend_idx = insertion_order[i] - 1;
+        size_t pend_idx = map_it->second - 1;
         if (pend_idx >= pair_count)
             continue;
         
@@ -185,11 +185,11 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         sorted.push_back(main_chain[i]);
     
     // Insert remaining pend elements using Jacobsthal order (minimizes comparisons)
-    std::vector<size_t> insertion_order = generate_insertion_order(pair_count);
+    std::map<size_t, size_t> insertion_order = generate_insertion_order(pair_count);
     
-    for (size_t i = 0; i < insertion_order.size(); ++i)
+    for (std::map<size_t, size_t>::iterator map_it = insertion_order.begin(); map_it != insertion_order.end(); ++map_it)
     {
-        size_t pend_idx = insertion_order[i] - 1;
+        size_t pend_idx = map_it->second - 1;
         if (pend_idx >= pair_count)
             continue;
         

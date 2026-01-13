@@ -11,6 +11,7 @@ all : $(NAME)
 
 $(NAME) : $(OBJ)
 	$(COMPILER) $(FLAGS) $(HEADER) $(OBJ) -o $(NAME)
+	
 
 %.o : %.cpp
 	$(COMPILER) $(FLAGS) $(HEADER) -c $< -o $@
