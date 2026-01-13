@@ -53,21 +53,28 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
             pairs.push_back(std::make_pair(a, b));
     }
     
-    // Extract larger and smaller values from pairs and create direct mapping
+    // Extract larger values from pairs for recursive sorting
     std::vector<int> main_chain;
-    std::map<int, int> value_map;  // Maps main_chain value to its pend value
     for (size_t i = 0; i < pairs.size(); ++i)
-    {
         main_chain.push_back(pairs[i].first);
-        value_map[pairs[i].first] = pairs[i].second;
-    }
     
+    // Sort pairs based on the order of main_chain after recursion
     ford_johnson_sort_vector(main_chain);
     
-    // After recursion: main_chain is sorted. Create sorted_pend using map (O(n log n))
-    std::vector<int> sorted_pend(main_chain.size());
+    // Generate sorted_pend to match the sorted main_chain order
+    std::vector<int> sorted_pend(pairs.size());
     for (size_t i = 0; i < main_chain.size(); ++i)
-        sorted_pend[i] = value_map[main_chain[i]];
+    {
+        for (size_t j = 0; j < pairs.size(); ++j)
+        {
+            if (pairs[j].first == main_chain[i])
+            {
+                sorted_pend[i] = pairs[j].second;
+                pairs[j].first = -1;  // Mark as used
+                break;
+            }
+        }
+    }
     
     // Initialize sorted with the first pend element (smallest in entire sequence)
     std::vector<int> sorted;
@@ -79,11 +86,11 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
         sorted.push_back(main_chain[i]);
     
     // Insert remaining pend elements using Jacobsthal order
-    std::map<size_t, size_t> insertion_order = generate_insertion_order(pair_count);
+    std::vector<size_t> insertion_order = generate_insertion_order_vector(pair_count);
     
-    for (std::map<size_t, size_t>::iterator map_it = insertion_order.begin(); map_it != insertion_order.end(); ++map_it)
+    for (size_t k = 0; k < insertion_order.size(); ++k)
     {
-        size_t pend_idx = map_it->second - 1;
+        size_t pend_idx = insertion_order[k] - 1;
         if (pend_idx >= pair_count)
             continue;
         
@@ -146,21 +153,28 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
             pairs.push_back(std::make_pair(a, b));
     }
     
-    // Extract larger and smaller values from pairs and create direct mapping
+    // Extract larger values from pairs for recursive sorting
     std::deque<int> main_chain;
-    std::map<int, int> value_map;  // Maps main_chain value to its pend value
     for (size_t i = 0; i < pairs.size(); ++i)
-    {
         main_chain.push_back(pairs[i].first);
-        value_map[pairs[i].first] = pairs[i].second;
-    }
     
+    // Sort pairs based on the order of main_chain after recursion
     ford_johnson_sort_deque(main_chain);
     
-    // After recursion: main_chain is sorted. Create sorted_pend using map (O(n log n))
-    std::deque<int> sorted_pend(main_chain.size());
+    // Generate sorted_pend to match the sorted main_chain order
+    std::deque<int> sorted_pend(pairs.size());
     for (size_t i = 0; i < main_chain.size(); ++i)
-        sorted_pend[i] = value_map[main_chain[i]];
+    {
+        for (size_t j = 0; j < pairs.size(); ++j)
+        {
+            if (pairs[j].first == main_chain[i])
+            {
+                sorted_pend[i] = pairs[j].second;
+                pairs[j].first = -1;  // Mark as used
+                break;
+            }
+        }
+    }
     
     // Initialize sorted with the first pend element (smallest in entire sequence)
     std::deque<int> sorted;
@@ -172,11 +186,11 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         sorted.push_back(main_chain[i]);
     
     // Insert remaining pend elements using Jacobsthal order (minimizes comparisons)
-    std::map<size_t, size_t> insertion_order = generate_insertion_order(pair_count);
+    std::deque<size_t> insertion_order = generate_insertion_order_deque(pair_count);
     
-    for (std::map<size_t, size_t>::iterator map_it = insertion_order.begin(); map_it != insertion_order.end(); ++map_it)
+    for (size_t k = 0; k < insertion_order.size(); ++k)
     {
-        size_t pend_idx = map_it->second - 1;
+        size_t pend_idx = insertion_order[k] - 1;
         if (pend_idx >= pair_count)
             continue;
         

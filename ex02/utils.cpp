@@ -117,7 +117,7 @@ bool parse_arguments(int argc, char** argv, std::deque<int>& deq)
 }
 
 
-std::map<size_t, size_t> generate_insertion_order(size_t n)
+std::vector<size_t> generate_insertion_order_vector(size_t n)
 {
     static const size_t jacobsthal[] = {
         1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, 5461,
@@ -126,11 +126,10 @@ std::map<size_t, size_t> generate_insertion_order(size_t n)
         178956971, 357913941, 715827883, 1431655765, 2863311531
     };
     
-    std::map<size_t, size_t> order;
+    std::vector<size_t> order;
     if (n < 2)
         return order;
 
-    size_t idx = 0;
     size_t prev = 1;
     for (size_t k = 0; prev < n; ++k)
     {
@@ -140,7 +139,37 @@ std::map<size_t, size_t> generate_insertion_order(size_t n)
             bound = n;
         
         for (size_t i = bound; i > prev; --i)
-            order[idx++] = i;
+            order.push_back(i);
+        
+        prev = curr;
+    }
+    
+    return order;
+}
+
+std::deque<size_t> generate_insertion_order_deque(size_t n)
+{
+    static const size_t jacobsthal[] = {
+        1, 3, 5, 11, 21, 43, 85, 171, 341, 683, 1365, 2731, 5461,
+        10923, 21845, 43691, 87381, 174763, 349525, 699051, 1398101,
+        2796203, 5592405, 11184811, 22369621, 44739243, 89478485,
+        178956971, 357913941, 715827883, 1431655765, 2863311531
+    };
+    
+    std::deque<size_t> order;
+    if (n < 2)
+        return order;
+
+    size_t prev = 1;
+    for (size_t k = 0; prev < n; ++k)
+    {
+        size_t curr = jacobsthal[k];
+        size_t bound = curr;
+        if (curr > n)
+            bound = n;
+        
+        for (size_t i = bound; i > prev; --i)
+            order.push_back(i);
         
         prev = curr;
     }

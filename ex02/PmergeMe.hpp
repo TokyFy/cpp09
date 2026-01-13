@@ -14,7 +14,6 @@
 
 #include <vector>
 #include <deque>
-#include <map>
 #include <string>
 #include <ctime>
 #include <iostream>
@@ -35,7 +34,8 @@ int                 parse_number(const std::string& str);
 bool                parse_arguments(int argc, char** argv, std::vector<int>& vec);
 bool                parse_arguments(int argc, char** argv, std::deque<int>& deq);
 
-std::map<size_t, size_t> generate_insertion_order(size_t n);
+std::vector<size_t> generate_insertion_order_vector(size_t n);
+std::deque<size_t>  generate_insertion_order_deque(size_t n);
 
 void                ford_johnson_sort_vector(std::vector<int>& vec);
 void                binary_insert(std::vector<int>& sorted, int value, size_t limit);
