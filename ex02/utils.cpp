@@ -12,12 +12,19 @@
 
 #include "PmergeMe.hpp"
 
+double get_time(void)
+{
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    return (double)tv.tv_sec * 1000.0 + (double)tv.tv_usec / 1000.0;
+}
+
 void print_time(const std::string& container_name, size_t size, double microseconds)
 {
     std::cout << "Time to process a range of " << size 
               << " elements with std::" << container_name 
               << " : " << std::fixed << std::setprecision(5) 
-              << microseconds << " us" << std::endl;
+              << microseconds << " ms" << std::endl;
 }
 
 bool is_valid_number(const std::string& str)
@@ -139,4 +146,30 @@ std::map<size_t, size_t> generate_insertion_order(size_t n)
     }
     
     return order;
+}
+
+void print_sequence(const std::string& prefix, const std::deque<int>& deq)
+{
+    std::cout << prefix;
+    for (size_t i = 0; i < deq.size(); ++i)
+    {
+        std::cout << deq[i];
+        if (i + 1 < deq.size())
+            std::cout << " ";
+    }
+    std::cout << std::endl;
+}
+
+void print_sequence(const std::string& prefix, const std::vector<int>& vec)
+{
+    std::cout << prefix;
+    
+    for (size_t i = 0; i < vec.size(); ++i)
+    {
+        std::cout << vec[i];
+        if (i + 1 < vec.size())
+            std::cout << " ";
+    }
+    
+    std::cout << std::endl;
 }

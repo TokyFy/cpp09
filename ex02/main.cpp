@@ -11,15 +11,6 @@
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
-#include <sys/time.h>
-#include <ctime>
-
-static double get_time_microseconds(void)
-{
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    return static_cast<double>(tv.tv_sec) * 1000000.0 + static_cast<double>(tv.tv_usec);
-}
 
 int main(int argc, char** argv)
 {
@@ -33,7 +24,7 @@ int main(int argc, char** argv)
     std::deque<int> deq;
     double start, time_vec, time_deq;
     
-    start = get_time_microseconds();
+    start = get_time();
     if (!parse_arguments(argc, argv, deq))
     {
         std::cerr << "Error" << std::endl;
@@ -42,9 +33,9 @@ int main(int argc, char** argv)
 
     std::deque<int> deq_original(deq);
     ford_johnson_sort_deque(deq);
-    time_deq = get_time_microseconds() - start;
+    time_deq = get_time() - start;
     
-    start = get_time_microseconds();
+    start = get_time();
     if (!parse_arguments(argc, argv, vec))
     {
         std::cerr << "Error" << std::endl;
@@ -52,7 +43,7 @@ int main(int argc, char** argv)
     }
     
     ford_johnson_sort_vector(vec);
-    time_vec = get_time_microseconds() - start;
+    time_vec = get_time() - start;
     
     print_sequence("Before: ", deq_original);
     print_sequence("After:  ", deq);

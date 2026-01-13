@@ -104,19 +104,6 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
     vec = sorted;
 }
 
-void print_sequence(const std::string& prefix, const std::vector<int>& vec)
-{
-    std::cout << prefix;
-    
-    for (size_t i = 0; i < vec.size(); ++i)
-    {
-        std::cout << vec[i];
-        if (i + 1 < vec.size())
-            std::cout << " ";
-    }
-    
-    std::cout << std::endl;
-}
 
 // DEQUE IMPLEMENTATION
 
@@ -210,14 +197,4 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
     deq = sorted;
 }
 
-void print_sequence(const std::string& prefix, const std::deque<int>& deq)
-{
-    std::cout << prefix;
-    for (size_t i = 0; i < deq.size(); ++i)
-    {
-        std::cout << deq[i];
-        if (i + 1 < deq.size())
-            std::cout << " ";
-    }
-    std::cout << std::endl;
-}
+

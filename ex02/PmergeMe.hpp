@@ -26,7 +26,10 @@
 #include <iterator>
 #include <limits>
 #include <iomanip>
+#include <sys/time.h>
+#include <ctime>
 
+double              get_time(void);
 bool                is_valid_number(const std::string& str);
 int                 parse_number(const std::string& str);
 bool                parse_arguments(int argc, char** argv, std::vector<int>& vec);
