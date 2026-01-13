@@ -42,10 +42,10 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
         straggler = vec[n - 1];
     
     size_t pair_count = n / 2;
-    for (size_t i = 0; i < pair_count; ++i)
+    for (size_t i = 0; i < pair_count * 2; i += 2)
     {
-        int a = vec[2 * i];
-        int b = vec[2 * i + 1];
+        int a = vec[i];
+        int b = vec[i + 1];
         
         if (a < b)
             pairs.push_back(std::make_pair(b, a));
@@ -142,10 +142,10 @@ void ford_johnson_sort_deque(std::deque<int>& deq)
         straggler = deq[n - 1];
     
     size_t pair_count = n / 2;
-    for (size_t i = 0; i < pair_count; ++i)
+    for (size_t i = 0; i < pair_count * 2; i += 2)
     {
-        int a = deq[2 * i];
-        int b = deq[2 * i + 1];
+        int a = deq[i];
+        int b = deq[i + 1];
         
         if (a < b)
             pairs.push_back(std::make_pair(b, a));
