@@ -93,9 +93,12 @@ void BitcoinExchange::query(std::string tranfers)
 
         std::list<BLOCK>::iterator match = std::lower_bound(nodes.begin() , nodes.end() , block , comp<BLOCK>);
         
-        if(match == nodes.begin())
+        bool exact_match = (match != nodes.end() && match->first == block.first);
+        
+        if(!exact_match && match == nodes.begin())
             throw std::runtime_error("match not found");
-        else
+        
+        if(!exact_match)
             match--;
         
         std::cout << tranfers.substr(0 , 10) << " => " << value << " = " << value * match->second << std::endl;
