@@ -70,7 +70,7 @@ void ford_johnson_sort_vector(std::vector<int>& vec)
             if (pairs[j].first == main_chain[i])
             {
                 sorted_pend[i] = pairs[j].second;
-                pairs[j].first = -1;  // Mark as used
+                pairs[j].first = -1;
                 break;
             }
         }
