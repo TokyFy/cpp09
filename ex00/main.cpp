@@ -19,7 +19,7 @@ int main(int argc , char** argv)
 {
     if(argc != 2)
     {
-        std::cout << "usage : ./btc file" << std::endl;
+        std::cerr << "usage : ./btc file" << std::endl;
         return 1;
     }
 
@@ -27,7 +27,7 @@ int main(int argc , char** argv)
 
     if(!data)
     {
-        std::cout << "Data not founds" << std::endl;
+        std::cerr << "Data not founds" << std::endl;
         return 1;
     }
 
@@ -36,7 +36,7 @@ int main(int argc , char** argv)
 
     if(!std::getline(data , line) || line != "date,exchange_rate")
     {
-        std::cout << "Error : Invalid database" << std::endl;
+        std::cerr << "Error : Invalid database" << std::endl;
         return 1;
     }
 
@@ -45,7 +45,7 @@ int main(int argc , char** argv)
 
     if(!blockchain.size())
     {
-        std::cout << "Error : Empty database" << std::endl;
+        std::cerr << "Error : Empty database" << std::endl;
         return 1;
     }
 
@@ -53,13 +53,13 @@ int main(int argc , char** argv)
 
     if(!input)
     {
-        std::cout << "Error : failed to open " << argv[1] << std::endl;
+        std::cerr << "Error : failed to open " << argv[1] << std::endl;
         return 1;
     }
 
     if(!std::getline(input , line) || line != "date | value")
     {
-        std::cout << "Error : Invalid input" << std::endl;
+        std::cerr << "Error : Invalid input" << std::endl;
         return 1;
     }
 

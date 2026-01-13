@@ -111,7 +111,7 @@ std::ostream& operator<< (std::ostream& stream, const TOKEN token)
 {
     const std::string TYPE[] = {"NUMERAL" , "ADDEND" , "MINUEND" , "DIVIDEND" , "MULTIPLICAND"};
     
-    std::cout << std::setw(13) << std::left << TYPE[token.first] << token.second;
+    std::cerr << std::setw(13) << std::left << TYPE[token.first] << token.second;
 
     return stream; 
 }

@@ -65,7 +65,7 @@ void BitcoinExchange::sync (std::string transaction)
 
     catch (std::exception& err)
     {
-        std::cout 
+        std::cerr 
             << std::left << std::setw(25) << transaction 
             << RED <<  " Error : " << err.what() << RESET << std::endl;
     }
@@ -100,7 +100,7 @@ void BitcoinExchange::query(std::string tranfers)
     } 
     catch (std::exception& err)
     {
-        std::cout 
+        std::cerr 
             << std::left << std::setw(25) << tranfers 
             << RED <<  " Error : " << err.what() << RESET << std::endl;
     }
